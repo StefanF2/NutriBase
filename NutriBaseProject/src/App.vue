@@ -1,11 +1,18 @@
 <script setup>
-  import Navbar from './components/Navbar'
+import Navbar from './components/Navbar.vue'
+import Router from 'vue-router'
+import {RouterView, RouterLink} from "vue-router";
+
 </script>
 
 <template>
-  <div>
-    <nav>
-
-    </nav>
-  </div>
+  <Navbar />
+  <main>
+    <h1>agoesg</h1>
+    <RouterView />
+  </main>
 </template>
+
+<style scoped>
+
+</style>
