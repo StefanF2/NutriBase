@@ -7,7 +7,7 @@ import {RouterView, RouterLink} from "vue-router";
     <div class="nav__logo">Nutri-Base</div>
     <ul class="nav__links">
       <li><RouterLink to="/">Home</RouterLink></li>
-      <li><RouterLink to="/products">Products</RouterLink></li>
+      <li><RouterLink to="/products">Favorites</RouterLink></li>
       <li><RouterLink to="/about">About us</RouterLink></li>
     </ul>
     <div class="nav__button__container">
@@ -65,6 +65,10 @@ nav{
 }
 .nav__button{
   padding: 0.5rem 1rem;
+  font-size: 1.2rem;
+  font-family: Century Gothic, Tahoma, sans-serif;
+  border: 2px solid black;
   border-radius: 2rem;
+  cursor: pointer;
 }
 </style>

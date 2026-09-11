@@ -1,5 +1,6 @@
 <script setup>
-
+import {ref} from "vue";
+const input = ref();
 </script>
 
 <template>
@@ -7,17 +8,21 @@
     <div class="home">
       <h1 id="home__header">Nutri-Base</h1>
       <h2 id="home__info">A Database to search for Product information</h2>
-      <div class="home__search__container">
-        <input id="home__searchbar" type="search" placeholder="Search..." />
-        <button id="home__button" type="submit"><img class="home__button" src="../assets/searchbar_icon.png" alt="icon"></button>
-      </div>
+        <div class="home__search__container">
+          <input  id="home__searchbar" type="search" placeholder="Search..." v-model.lazy="input"/>
+          <button id="home__button" type="submit"><img class="home__button" src="../assets/searchbar_icon.png" alt="icon"></button>
+        </div>
+      <p>{{input}}</p>
     </div>
+    <div class="result">
+      <h2 id="result__header">Best results: </h2>
+    </div>
+
   </main>
   <RouterView />
 </template>
 
 <style scoped>
-
 body{
   margin: 0;
   padding: 0;
@@ -27,12 +32,12 @@ body{
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin: 10rem auto;
+  margin: 5rem auto;
   gap: 3rem;
 }
 .home__search__container{
   position: relative;
-  width: 20%;
+  width: 35%;
 }
 
 #home__header{
@@ -63,6 +68,15 @@ body{
   font-size: 1.8rem;
   cursor: pointer;
   background-color: transparent;
+}
+.result{
+  display: flex;
+  margin: 0 15rem 0 15rem;
+}
+#result__header{
+  font-size: 2rem;
+  font-family: "Century Gothic", Helvetica, sans-serif;
+  display: none;
 }
 
 </style>
