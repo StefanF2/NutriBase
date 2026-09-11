@@ -7,7 +7,6 @@ import Navbar from './components/Navbar.vue'
 <template>
   <Navbar />
   <main>
-    <h1>agoesg</h1>
   </main>
 </template>
 
