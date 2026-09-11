@@ -1,17 +1,16 @@
 <script setup>
-  import Navbar from './components/navbar.vue'
-  import Product from './components/product.vue'
+import Navbar from './components/Navbar.vue'
+
+
 </script>
 
 <template>
-
-  <div>
-    <Navbar />
-    <nav>
-
-    </nav>
-  </div>
+  <Navbar />
   <main>
-    <Product />
+    <h1>agoesg</h1>
   </main>
 </template>
+
+<style scoped>
+
+</style>
