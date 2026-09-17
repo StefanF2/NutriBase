@@ -7,12 +7,10 @@ const isFilterOpen = ref(false);
 function toggleFilter() {
   isFilterOpen.value = !isFilterOpen.value;
   const filterklasse = document.getElementById('filter');
-  if(filterklasse.value.borderRadius === "50px") {
-    filterklasse.style.borderRadius = "50px 50px 0px 0px";
-  }else{
-    filterklasse.style.borderRadius = "50px";
   }
-}
+
+let test;
+test = ['Apfel','Banane','Birne'];
 </script>
 
 <template>
@@ -28,8 +26,19 @@ function toggleFilter() {
   <input class="input-field" v-model="message" type="text" placeholder="favorites...">
   <button class="input-button" @click="console.log(message)"><!--<img src="searchbar_icon.png">--></button>
   <div class="filter" id="filter" @click="toggleFilter()">filter</div>
-  <p v-if="isFilterOpen" class="filter-dropdown">test</p>
+  <p v-if="isFilterOpen" class="filter-dropdown">
+    <button class="filter-options"> Food </button>
+    <button class="filter-options"> Beverage </button>
+    <button class="filter-options"> Calories </button>
+  </p>
 </div>
+
+  </div>
+  <div class="products">
+    <li class="product-card" v-for="(item, index) in test" :key="index">
+      <div class="item-name">{{ item }}</div>
+      <img class="background-img" src="../assets/Logo.jpg">
+    </li>
   </div>
 </template>
 
@@ -100,15 +109,57 @@ width: 100vw;
 .filter-dropdown{
   position: absolute;
   left: 70vw;
-  top: 368px;
+  top: 356px;
   border: 2px solid black;
-  border-radius: 0px 0px 50px 50px;
+  border-radius: 0px 0px 25px 25px;
   width: 100px;
-  height: 40px;
+  height: 120px;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
+  flex-direction: column;
   background-color: white;
   z-index: -1;
+}
+.filter-options{
+  background-color: transparent;
+  border: none;
+}
+.product-card{
+  height: 250px;
+  border: 2px solid black;
+  width: 200px;
+  border-radius: 1rem;
+  padding: 10px;
+  margin: 10px;
+  background-color: white;
+  list-style-type: none;
+}
+.products{
+  display: flex;
+  flex-direction: row;
+  z-index: 1;
+  position: absolute;
+}
+.background-img{
+  overflow: hidden;
+  max-height: 100%;
+  max-width: 100%;
+  z-index: 0;
+  display: block;
+}
+.item-name{
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  top: 90px;
+  position: relative;
+  font-size: 40px;
+  font-family: "Century Gothic",serif;
+  font-weight: bold;
+  text-shadow: 0 0.2vw 0.4vw rgba(255, 255, 255, 0.8);
+}
+.product-card:hover{
+  border: 5px solid black;
 }
 </style>
