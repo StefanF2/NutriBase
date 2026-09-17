@@ -30,6 +30,7 @@ nav{
   display: flex;
   align-items: center;
   justify-content: space-between;
+
 }
 
 .nav__logo{
@@ -47,7 +48,7 @@ nav{
   font-size: 1.5rem;
   font-weight: 500;
   text-decoration: none;
-   color: white;
+  color: white;
   font-family: Century Gothic, sans-serif;
   padding: 0 1.5rem;
 }
