@@ -1,8 +1,26 @@
 <script setup>
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import Result from "./Result.vue";
+
 const input = ref();
 const searchedbar = ref(false);
+/*const app = new Vue({
+  el: "#app",
+  data: {
+    input:""
+  },
+  mounted(){
+    if(localStorage.input){
+      this.input= localStorage.input;
+    }
+  },
+  watch: {
+    input(newInput){
+      localStorage.input = newInput;
+    }
+  }
+})
+*/
 function showResults() {
   searchedbar.value = true;
 }
@@ -50,6 +68,16 @@ const tests = ref([
   },
 ])
 
+const filteredTests = computed(() => {
+  if (!input.value) {
+    return tests.value;
+  }
+
+  return tests.value.filter(test =>
+      test.title.toLowerCase().includes(input.value.toLowerCase())
+  );
+});
+
 </script>
 
 <template>
@@ -68,7 +96,7 @@ const tests = ref([
 
       <div class="result__grid">
         <Result
-          v-for="test in tests"
+          v-for="test in filteredTests"
           :key="test.id"
           :title="test.title"
           :image="test.image"
@@ -94,7 +122,7 @@ body{
 }
 .home__search__container{
   position: relative;
-  width: 35%;
+  width: 45%;
 }
 
 #home__header{
