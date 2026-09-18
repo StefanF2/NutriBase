@@ -1,19 +1,22 @@
 <script setup>
+import {tests} from "../data/ProductData.js";
+import {useRoute} from "vue-router";
 
-const props = defineProps({
-  id: Number,
-  title: String,
-  image: String,
-});
+const route = useRoute();
+const abc = tests.find(
+    (product) => product.id == route.params.id
+);
 
 </script>
 
 <template>
   <main>
     <div class="info__container">
-      {{props.id}}
-      {{props.image}}
-      {{props.title}}
+      <h1>{{abc.title}}</h1>
+      <p>Lorem ipsum </p>
+      id= {{ abc.id}}
+      Image = <img :src="abc.image" alt="">
+      <button @click="clicker" >hgsrhsh</button>
     </div>
   </main>
   <RouterView />

@@ -7,7 +7,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <RouterLink style="textDecoration: none" to='/productinfo/{{props.title}}'>
+  <RouterLink style="text-decoration: none" :to="'/productinfo/'+props.id">
   <button style="text-decoration: none;"class="results__item">
     <div class="results__image">
       <img :src="props.image" alt=""/>

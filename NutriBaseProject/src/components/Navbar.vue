@@ -30,9 +30,7 @@ nav{
   display: flex;
   align-items: center;
   justify-content: space-between;
-
 }
-
 .nav__logo{
   font-size: 2rem;
   font-weight: 700;
@@ -52,15 +50,12 @@ nav{
   font-family: Century Gothic, sans-serif;
   padding: 0 1.5rem;
 }
-
 .nav__links li a:hover{
   text-decoration: underline;
 }
-
 .nav__links li + li{
   border-left: 1px solid white;
 }
-
 .nav__button__container{
   display: flex;
 }
