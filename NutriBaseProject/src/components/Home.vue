@@ -4,23 +4,6 @@ import Result from "./Result.vue";
 
 const input = ref();
 const searchedbar = ref(false);
-/*const app = new Vue({
-  el: "#app",
-  data: {
-    input:""
-  },
-  mounted(){
-    if(localStorage.input){
-      this.input= localStorage.input;
-    }
-  },
-  watch: {
-    input(newInput){
-      localStorage.input = newInput;
-    }
-  }
-})
-*/
 function showResults() {
   searchedbar.value = true;
 }
@@ -67,14 +50,16 @@ const tests = ref([
     image: 'src/assets/vue.svg'
   },
 ])
-
+// Entfernt leere spaces beim Input
 const filteredTests = computed(() => {
   if (!input.value) {
     return tests.value;
   }
 
+  const search = input.value.toLowerCase().replace(/\s/g, "");
+
   return tests.value.filter(test =>
-      test.title.toLowerCase().includes(input.value.toLowerCase())
+      test.title.toLowerCase().replace(/\s/g, "").includes(search)
   );
 });
 

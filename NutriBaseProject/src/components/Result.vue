@@ -1,12 +1,14 @@
 <script setup>
 const props = defineProps({
+  id: Number,
   title: String,
   image: String,
 })
 </script>
 
 <template>
-  <button class="results__item">
+  <RouterLink style="textDecoration: none" to='/productinfo/{{props.title}}'>
+  <button style="text-decoration: none;"class="results__item">
     <div class="results__image">
       <img :src="props.image" alt=""/>
     </div>
@@ -14,9 +16,15 @@ const props = defineProps({
       {{ props.title }}
     </div>
   </button>
+  </RouterLink>
 </template>
 
 <style scoped>
+.results__item:hover{
+  transition: 0.2s;
+  transform: scale(1.010);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
 .results__item {
   width: 100%;
   aspect-ratio: 1 / 1;
