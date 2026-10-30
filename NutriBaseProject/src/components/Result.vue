@@ -1,0 +1,62 @@
+<script setup>
+const props = defineProps({
+  id: Number,
+  title: String,
+  image: String,
+})
+</script>
+
+<template>
+  <RouterLink style="text-decoration: none" :to="'/productinfo/'+props.id">
+  <button style="text-decoration: none;"class="results__item">
+    <div class="results__image">
+      <img :src="props.image" alt=""/>
+    </div>
+    <div class="results__title">
+      {{ props.title }}
+    </div>
+  </button>
+  </RouterLink>
+</template>
+
+<style scoped>
+.results__item:hover{
+  transition: 0.2s;
+  transform: scale(1.010);
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
+}
+.results__item {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+
+  border: 3px solid black;
+  box-sizing: border-box;
+  background-color: white;
+  cursor:pointer;
+  border-radius: 1rem;
+
+  display: grid;
+  grid-template-rows: 1fr auto;
+  overflow: hidden;
+}
+.results__image {
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.results__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.results__title {
+  font-size: 2.5rem;
+  padding: 5px;
+  font-family: "Century Gothic", Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+</style>
