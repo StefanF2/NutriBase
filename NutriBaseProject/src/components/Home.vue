@@ -30,7 +30,6 @@ function showResults() {
           <input  id="home__searchbar" type="search" placeholder="Search..." v-model.lazy="input" @keyup.enter="showResults"/>
           <button id="home__button" type="submit"><img class="home__button" src="../assets/searchbar_icon.png" alt="icon" @click="showResults"></button>
         </div>
-
     </div>
 
     <div class="result" v-show="searchedbar">
