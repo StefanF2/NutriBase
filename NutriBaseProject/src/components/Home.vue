@@ -5,6 +5,7 @@ import Result from "./Result.vue";
 
 const input = ref();
 const searchedbar = ref(false);
+
 // Entfernt leere spaces beim Input
 const filteredTests = computed(() => {
   if (!input.value) {
@@ -15,6 +16,8 @@ const filteredTests = computed(() => {
       test.title.toLowerCase().replace(/\s/g, "").includes(search)
   );
 });
+
+
 
 function showResults() {
   searchedbar.value = true;
