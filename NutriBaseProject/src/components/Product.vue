@@ -38,6 +38,31 @@ function toggleFilter() {
 function toggleDropdown(name) {
   openDropdown.value = openDropdown.value === name ? null : name;
 }
+function toggledietaryfeatures() {
+  isDietaryfeaturesOpen.value = !isDietaryfeaturesOpen.value;
+  isDietarytypeOpen.value = false;
+  isPriceOpen.value = false;
+  isRatingOpen.value = false;
+  const dietaryfeaturesklasse = document.getElementById('dietaryfeatures');
+}
+function toggleprice() {
+  isPriceOpen.value = !isPriceOpen.value;
+  isDietaryfeaturesOpen.value = false;
+  isDietarytypeOpen.value = false;
+  isRatingOpen.value = false;
+  const priceklasse = document.getElementById('price');
+}
+function toggledietarytype() {
+  isDietarytypeOpen.value = !isDietarytypeOpen.value;
+  isDietaryfeaturesOpen.value = false;
+  isPriceOpen.value = false;
+  isRatingOpen.value = false;
+  const dietarytypeklasse = document.getElementById('dietarytype');
+}
+
+
+let test;
+test = ['Apfel','Banane','Birne', 'kirsche', 'Wassermelone', 'Granatapfel'];
 </script>
 
 <template>
@@ -198,6 +223,7 @@ div {
   justify-content: center;
   align-items: center;
   background-color: white;
+  z-index: 101;
 }
 .filter-dropdown {
   position: absolute;
@@ -213,7 +239,95 @@ div {
   align-items: center;
   gap: 12px;
   background-color: white;
-  z-index: -1;
+  list-style-type: none;
+  overflow: hidden;
+
+}
+.products{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 40px;
+  z-index: 1;
+  position: static;
+}
+.background-img{
+  overflow: hidden;
+  max-height: 100%;
+  max-width: 100%;
+  z-index: 0;
+  position: relative;
+  top: calc(100% / 2);
+  transform: translate(0, -50%)
+}
+.item-name{
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  top: -70px;
+  position: relative;
+  word-break: break-word;
+  font-size: 40px;
+  font-family: "Century Gothic",serif;
+  font-weight: bold;
+  text-shadow: 0 0.2vw 0.4vw rgba(255, 255, 255, 0.8);
+}
+.product-card:hover{
+  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
+  transform: translate(3px, -3px);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+.rating-dropdown, .dietaryfeatures-dropdown, .price-dropdown, .dietarytype-dropdown{
+  border: 2px solid black;
+  border-radius: 5px;
+  height: 200px;
+  width: 200px;
+  position: absolute;
+  left: auto;
+  right: 5vw;
+  max-width: calc(100vw - 10vw);
+  z-index: 99;
+  background-color: rgba(255, 255, 255, 1);
+}
+.rating, .dietaryfeatures, .price, .dietarytype{
+  width: 150px;
+  text-align: center;
+}
+.rating-dropdown{
+  top: 476px;
+}
+.dietarytype-dropdown{
+  top: 376px;
+}
+.dietaryfeatures-dropdown{
+  top: 446px;
+}
+.price-dropdown{
+  top: 411px;
+}
+</style>
+<style>
+* { box-sizing: border-box; }
+
+html, body, #app {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+html, body, * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar,
+  *::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
 }
 .filter-item {
   position: relative;

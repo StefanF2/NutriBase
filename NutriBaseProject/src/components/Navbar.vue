@@ -1,5 +1,14 @@
 <script setup>
-import {RouterView, RouterLink} from "vue-router";
+import {RouterView, RouterLink, useRouter} from "vue-router";
+import {useAuth} from "../composables/auth.js";
+
+const router = useRouter()
+const { isLoggedIn, logout } = useAuth()
+
+function handleLogout() {
+  logout()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -10,9 +19,18 @@ import {RouterView, RouterLink} from "vue-router";
       <li><RouterLink to="/products">Favorites</RouterLink></li>
       <li><RouterLink to="/about">About us</RouterLink></li>
     </ul>
+
     <div class="nav__button__container">
-      <button class="nav__button">Login</button>
+      <RouterLink to="/login" v-if="!isLoggedIn">
+        <button class="nav__button">
+          Login
+        </button>
+      </RouterLink>
+      <button v-else class="nav__button" @click="handleLogout">
+        Logout
+      </button>
     </div>
+
   </nav>
   <RouterView />
 </template>
@@ -56,7 +74,7 @@ nav{
 .nav__links li + li{
   border-left: 1px solid white;
 }
-.nav__button__container{
+.nav__button__container {
   display: flex;
 }
 .nav__button{
