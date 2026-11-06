@@ -13,7 +13,7 @@ function handleLogout() {
 
 <template>
   <nav>
-    <div class="nav__logo">Nutri-Base</div>
+    <div class="nav__logo"><RouterLink to="/">Nutri-Base</RouterLink></div>
     <ul class="nav__links">
       <li><RouterLink to="/">Home</RouterLink></li>
       <li><RouterLink to="/products">Favorites</RouterLink></li>
@@ -54,6 +54,10 @@ nav{
   font-weight: 700;
   color: white;
   font-family: Century Gothic, Tahoma, sans-serif;
+}
+.nav__logo a{
+  text-decoration: none;
+  color: white;
 }
 .nav__links{
   list-style: none;
