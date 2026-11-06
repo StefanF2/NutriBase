@@ -1,41 +1,84 @@
 import { ref, watch } from "vue";
+import { useAuth } from "../composables/auth.js";
 
-const STORAGE_KEY = "favorites";
+const { user } = useAuth();
 
-function loadFavorites(){
-    try{
-        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+const liked = ref([]);
+
+function getStorageKey() {
+    if (!user.value) {
+        return null;
+    }
+
+    return `favorites_${user.value.email}`;
+}
+
+function loadFavorites() {
+    try {
+        const key = getStorageKey();
+
+        if (!key) return [];
+
+        const saved = JSON.parse(
+            localStorage.getItem(key)
+        );
+
         return Array.isArray(saved) ? saved : [];
-    } catch{
+    } catch {
         return [];
     }
 }
-const liked = ref(loadFavorites());
 
+// Favoriten beim Start laden
+liked.value = loadFavorites();
+
+// Bei Accountwechsel die richtigen Favoriten laden
+watch(
+    () => user.value?.email,
+    () => {
+        liked.value = loadFavorites();
+    }
+);
+
+// Favoriten speichern
 watch(
     liked,
     (value) => {
-        try{
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(value));
-        }catch{
+        const key = getStorageKey();
 
+        if (!key) return;
+
+        try {
+            localStorage.setItem(
+                key,
+                JSON.stringify(value)
+            );
+        } catch {
+            // Speicherfehler
         }
     },
-    {deep: true}
+    { deep: true }
 );
 
 export function useFavorites() {
+
     function isLiked(id) {
         return liked.value.includes(id);
     }
 
     function toggleFavorite(id) {
         if (isLiked(id)) {
-            liked.value = liked.value.filter((i) => i !== id);
+            liked.value = liked.value.filter(
+                i => i !== id
+            );
         } else {
             liked.value.push(id);
         }
     }
 
-    return { liked, isLiked, toggleFavorite };
+    return {
+        liked,
+        isLiked,
+        toggleFavorite
+    };
 }

@@ -26,6 +26,7 @@ function login_checker() {
   if (errorLoginEmail.value || errorLoginPassword.value) {
     return;
   }
+
   const success = login(email.value, password.value);
   if (!success) {
     errorLoginEmail.value = true;

@@ -8,15 +8,12 @@ const message = ref('');
 const isFilterOpen = ref(false);
 const openDropdown = ref(null);
 const searchedbar = ref(false);
-
 const { liked } = useFavorites();
-
 const searchTerm = ref('');
 
 const favoriteItems = computed(() =>
     tests.filter((product) => liked.value.includes(product.id))
 );
-
 const filteredProducts = computed(() => {
   const search = searchTerm.value.trim().toLowerCase();
   return favoriteItems.value.filter((p) => p.title.toLowerCase().includes(search));
@@ -25,16 +22,13 @@ const filteredProducts = computed(() => {
 function showResults() {
   searchedbar.value = true;
 }
-
 function search() {
   searchTerm.value = message.value;
 }
-
 function toggleFilter() {
   isFilterOpen.value = !isFilterOpen.value;
   openDropdown.value = null;
 }
-
 function toggleDropdown(name) {
   openDropdown.value = openDropdown.value === name ? null : name;
 }
