@@ -8,15 +8,14 @@ const searchedbar = ref(false);
 
 // Entfernt leere spaces beim Input
 const filteredTests = computed(() => {
-  if (!input.value) {
-    return tests.value;
+  const search = (input.value ?? "").toLowerCase().replace(/\s/g, "");
+  if (!search) {
+    return tests;
   }
-  const search = input.value.toLowerCase().replace(/\s/g, "");
   return tests.filter(test =>
       test.title.toLowerCase().replace(/\s/g, "").includes(search)
   );
 });
-
 
 
 function showResults() {
