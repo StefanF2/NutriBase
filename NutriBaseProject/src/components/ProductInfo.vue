@@ -28,7 +28,8 @@ onMounted(async () => {
         image: p.image_front_url || "",
         brands: p.brands || "",
         quantity: p.quantity || "",
-        nutrition_grades: p.nutrition_grades || ""
+        nutrition_grades: p.nutrition_grades || "",
+        nutriments: p.nutriments || ""
       };
     } else {
       error.value = true;
@@ -48,7 +49,7 @@ onMounted(async () => {
     </div>
 
     <div v-else-if="product" class="info__container">
-      <h1>{{ product.title }}</h1>
+      <h1 id="info__title">{{ product.title }}</h1>
 
       <p v-if="product.brands">{{ product.brands }}</p>
       <p v-if="product.quantity">{{ product.quantity }}</p>
@@ -67,6 +68,9 @@ onMounted(async () => {
       <button type="button" @click="toggleFavorite(product.id)">
         {{ isLiked(product.id) ? "Heart" : "No Heart" }}
       </button>
+      <p>
+        Nutriments: {{ product.nutriments }}
+      </p>
     </div>
 
     <div v-else class="info__container">
@@ -86,5 +90,9 @@ img {
   max-width: 250px;
   height: auto;
   display: block;
+}
+#info__title{
+  font-size: 3rem;
+  font-family: "Century Gothic", Helvetica, sans-serif;
 }
 </style>
