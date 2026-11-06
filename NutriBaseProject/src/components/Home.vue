@@ -17,13 +17,9 @@ const SEARCH_STORAGE_KEY = "off_search_timestamps";
 // Gespeicherte Suchanfragen laden
 function getSearchTimestamps() {
   try {
-    const saved = JSON.parse(
-        localStorage.getItem(SEARCH_STORAGE_KEY) || "[]"
-    );
+    const saved = JSON.parse(localStorage.getItem(SEARCH_STORAGE_KEY) || "[]");
 
-    return Array.isArray(saved)
-        ? saved.filter(time => Number.isFinite(time))
-        : [];
+    return Array.isArray(saved) ? saved.filter(time => Number.isFinite(time)) : [];
   } catch {
     return [];
   }
@@ -41,13 +37,11 @@ function checkSearchLimit() {
     const waitTime = Math.ceil(
         (timestamps[0] + TIME_WINDOW - now) / 1000
     );
-
     return {
       allowed: false,
       waitTime
     };
   }
-
   timestamps.push(now);
 
   localStorage.setItem(
@@ -140,63 +134,32 @@ async function showResults() {
 <template>
   <main>
     <div class="home">
-
       <h1 id="home__header">Nutri-Base</h1>
-
       <h2 id="home__info">
         A Database to search for Product information
       </h2>
-
       <div class="home__search__container">
-
-        <input
-            id="home__searchbar"
-            type="search"
-            placeholder="Search..."
-            v-model="input"
-            @keyup.enter="showResults"
-        />
-
-        <button
-            id="home__button"
-            type="button"
-            @click="showResults"
-            :disabled="loading"
-            aria-label="Search"
-        >
-          <img
-              class="home__button"
-              src="../assets/searchbar_icon.png"
-              alt="Search"
-          />
+        <input id="home__searchbar" type="search" placeholder="Search..." v-model="input" @keyup.enter="showResults"/>
+        <button id="home__button" type="button" @click="showResults" :disabled="loading" aria-label="Search">
+          <img class="home__button" src="../assets/searchbar_icon.png" alt="Search"/>
         </button>
-
       </div>
     </div>
 
     <div class="result" v-show="searchedbar">
-
       <h2 id="result__header">
         Best results:
       </h2>
-
       <div v-if="loading" id="loading">
         Lade...
       </div>
-
       <div v-else-if="error" class="no-results">
         {{ error }}
       </div>
-
-      <div
-          v-else-if="products.length === 0"
-          class="no-results"
-      >
+      <div v-else-if="products.length === 0" class="no-results">
         Keine Produkte gefunden.
       </div>
-
       <div v-else class="result__grid">
-
         <Result
             v-for="product in products"
             :key="product.id"
@@ -204,7 +167,6 @@ async function showResults() {
             :image="product.image"
             :id="product.id"
         />
-
       </div>
     </div>
   </main>

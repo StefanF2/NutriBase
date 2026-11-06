@@ -8,21 +8,11 @@ const props = defineProps({
 </script>
 
 <template>
-  <RouterLink
-      style="text-decoration: none"
-      :to="'/productinfo/' + props.id"
-  >
-    <button
-        style="text-decoration: none;"
-        class="results__item"
-    >
+  <RouterLink style="text-decoration: none" :to="'/productinfo/' + props.id">
+    <button style="text-decoration: none;" class="results__item">
       <div class="results__image">
-        <img
-            :src="props.image"
-            :alt="props.title"
-        />
+        <img :src="props.image" :alt="props.title"/>
       </div>
-
       <div class="results__title">
         {{ props.title }}
       </div>
