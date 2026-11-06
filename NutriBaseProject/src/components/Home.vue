@@ -5,6 +5,7 @@ import Result from "./Result.vue";
 
 const input = ref();
 const searchedbar = ref(false);
+const loading = ref(true);
 
 // Entfernt leere spaces beim Input
 const filteredTests = computed(() => {
@@ -19,6 +20,7 @@ const filteredTests = computed(() => {
 
 
 function showResults() {
+  loading.value = false;
   searchedbar.value = true;
 }
 </script>
@@ -36,7 +38,10 @@ function showResults() {
 
     <div class="result" v-show="searchedbar">
       <h2 id="result__header" >Best results: </h2>
-      <div class="result__grid">
+      <div v-if="loading" id="loading">
+        Lade...
+      </div>
+      <div v-else class="result__grid">
         <Result
           v-for="test in filteredTests"
           :key="test.id"
@@ -105,5 +110,12 @@ function showResults() {
   font-size: 2rem;
   font-family: "Century Gothic", Helvetica, sans-serif;
   padding-bottom: 1rem;
+}
+#loading{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  font-family: "Century Gothic", Helvetica, sans-serif;
 }
 </style>
