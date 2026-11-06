@@ -8,10 +8,16 @@ const message = ref('');
 const isFilterOpen = ref(false);
 const openDropdown = ref(null);
 const searchedbar = ref(false);
+const searchTerm = ref('');
+
+const filterOptions = [
+  { key: 'dietarytype', label: 'Dietary Type' },
+  { key: 'price', label: 'Price' },
+  { key: 'dietaryfeatures', label: 'Dietary Features' },
+  { key: 'rating', label: 'Rating' },
+];
 
 const { liked } = useFavorites();
-
-const searchTerm = ref('');
 
 const favoriteItems = computed(() =>
     tests.filter((product) => liked.value.includes(product.id))
@@ -19,15 +25,14 @@ const favoriteItems = computed(() =>
 
 const filteredProducts = computed(() => {
   const search = searchTerm.value.trim().toLowerCase();
-  return favoriteItems.value.filter((p) => p.title.toLowerCase().includes(search));
+  return favoriteItems.value.filter((p) =>
+      p.title.toLowerCase().includes(search)
+  );
 });
-
-function showResults() {
-  searchedbar.value = true;
-}
 
 function search() {
   searchTerm.value = message.value;
+  searchedbar.value = true;
 }
 
 function toggleFilter() {
@@ -38,31 +43,6 @@ function toggleFilter() {
 function toggleDropdown(name) {
   openDropdown.value = openDropdown.value === name ? null : name;
 }
-function toggledietaryfeatures() {
-  isDietaryfeaturesOpen.value = !isDietaryfeaturesOpen.value;
-  isDietarytypeOpen.value = false;
-  isPriceOpen.value = false;
-  isRatingOpen.value = false;
-  const dietaryfeaturesklasse = document.getElementById('dietaryfeatures');
-}
-function toggleprice() {
-  isPriceOpen.value = !isPriceOpen.value;
-  isDietaryfeaturesOpen.value = false;
-  isDietarytypeOpen.value = false;
-  isRatingOpen.value = false;
-  const priceklasse = document.getElementById('price');
-}
-function toggledietarytype() {
-  isDietarytypeOpen.value = !isDietarytypeOpen.value;
-  isDietaryfeaturesOpen.value = false;
-  isPriceOpen.value = false;
-  isRatingOpen.value = false;
-  const dietarytypeklasse = document.getElementById('dietarytype');
-}
-
-
-let test;
-test = ['Apfel','Banane','Birne', 'kirsche', 'Wassermelone', 'Granatapfel'];
 </script>
 
 <template>
@@ -78,50 +58,58 @@ test = ['Apfel','Banane','Birne', 'kirsche', 'Wassermelone', 'Granatapfel'];
           v-model="message"
           type="text"
           placeholder="favorites..."
-          @keyup.enter="search(), showResults()"
+          @keyup.enter="search"
       />
-      <button class="input-button" type="button" aria-label="Search" @click="search()">
+      <button class="input-button" type="button" aria-label="Search" @click="search">
         <!--<img src="searchbar_icon.png">-->
       </button>
 
       <div class="filter-wrapper">
-        <div class="filter" @click="toggleFilter()">filter</div>
+        <button
+            class="filter"
+            :class="{ active: isFilterOpen }"
+            type="button"
+            @click="toggleFilter"
+        >
+          <svg class="filter-icon" viewBox="0 0 24 24" width="18" height="18" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 5h18l-7 8v6l-4 2v-8L3 5z" />
+          </svg>
+          <span>Filter</span>
+          <svg class="chevron" viewBox="0 0 24 24" width="16" height="16" fill="none"
+               stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
 
-        <div v-if="isFilterOpen" class="filter-dropdown">
-          <div class="filter-item">
-            <div class="filter-option" @click="toggleDropdown('dietarytype')">Dietary Type</div>
-            <div v-if="openDropdown === 'dietarytype'" class="sub-dropdown">
-              <div></div>
+        <Transition name="pop">
+          <div v-if="isFilterOpen" class="filter-dropdown">
+            <div v-for="opt in filterOptions" :key="opt.key" class="filter-item">
+              <button
+                  class="filter-option"
+                  :class="{ active: openDropdown === opt.key }"
+                  type="button"
+                  @click="toggleDropdown(opt.key)"
+              >
+                <svg class="option-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none"
+                     stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+                <span>{{ opt.label }}</span>
+              </button>
+
+              <Transition name="pop">
+                <div v-if="openDropdown === opt.key" class="sub-dropdown"></div>
+              </Transition>
             </div>
           </div>
-
-          <div class="filter-item">
-            <div class="filter-option" @click="toggleDropdown('price')">Price</div>
-            <div v-if="openDropdown === 'price'" class="sub-dropdown">
-              <div></div>
-            </div>
-          </div>
-
-          <div class="filter-item">
-            <div class="filter-option" @click="toggleDropdown('dietaryfeatures')">Dietary Features</div>
-            <div v-if="openDropdown === 'dietaryfeatures'" class="sub-dropdown">
-              <div></div>
-            </div>
-          </div>
-
-          <div class="filter-item">
-            <div class="filter-option" @click="toggleDropdown('rating')">Rating</div>
-            <div v-if="openDropdown === 'rating'" class="sub-dropdown">
-              <div></div>
-            </div>
-          </div>
-        </div>
+        </Transition>
       </div>
     </div>
   </div>
 
-  <ul class="products" v-show="searchedbar">
-    <h2 id="result__header" >Best results: </h2>
+  <section class="products" v-show="searchedbar">
+    <h2 id="result__header">Best results:</h2>
     <div class="result__grid">
       <Result
           v-for="item in filteredProducts"
@@ -131,21 +119,13 @@ test = ['Apfel','Banane','Birne', 'kirsche', 'Wassermelone', 'Granatapfel'];
           :id="item.id"
       />
     </div>
-    <li v-if="filteredProducts.length === 0" class="no-results">
+    <div v-if="filteredProducts.length === 0" class="no-results">
       No favorites found
-    </li>
-  </ul>
+    </div>
+  </section>
 </template>
 
 <style scoped>
-div::-webkit-scrollbar {
-  display: none;
-}
-div {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
 .text {
   font-family: "Century Gothic", sans-serif;
   display: flex;
@@ -158,16 +138,21 @@ div {
   padding-top: 50px;
   font-size: 70px;
 }
+
 .undertitle {
   padding-top: 40px;
+}
+
+.background {
+  position: fixed;
+  inset: 0;
+  z-index: -100;
+  overflow: hidden;
 }
 
 .logo {
   width: 100%;
   max-width: 100%;
-  position: fixed;
-  z-index: -100;
-  overflow: hidden;
   opacity: 0.3;
 }
 
@@ -175,11 +160,12 @@ div {
   position: relative;
   width: 100%;
   margin-top: 40px;
+  margin-bottom: 100px;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-bottom: 100px;
 }
+
 .input-field {
   font-size: 28px;
   padding-left: 10px;
@@ -191,220 +177,163 @@ div {
   border-radius: 50px;
   font-family: "Century Gothic", sans-serif;
 }
+
 .input-button {
   position: relative;
   right: 62px;
   margin-right: -60px;
-  font-size: 20px;
   height: 46px;
   width: 60px;
   border: 1.5px solid black;
   border-radius: 50px;
   background-color: white;
 }
-.input-button:hover,
-.filter:hover,
-.filter-option:hover {
+
+.input-button:hover {
   cursor: pointer;
 }
+
+/* ---------- Filter ---------- */
 .filter-wrapper {
   position: absolute;
   right: 5vw;
   top: 5px;
-  width: 150px;
   z-index: 101;
 }
+
 .filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  padding: 0 18px;
   border: 2px solid black;
   border-radius: 50px;
-  width: 150px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   background-color: white;
-  z-index: 101;
+  color: black;
+  font-family: "Century Gothic", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
+
+.filter:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.filter.active {
+  background-color: black;
+  color: white;
+}
+
+.chevron {
+  transition: transform 0.25s ease;
+}
+
+.filter.active .chevron {
+  transform: rotate(180deg);
+}
+
 .filter-dropdown {
   position: absolute;
-  top: 23px;
+  top: calc(100% + 10px);
   right: 0;
-  border: 2px solid black;
-  border-radius: 0 0 25px 25px;
-  width: 150px;
-  padding-top: 20px;
-  padding-bottom: 10px;
+  width: 200px;
+  padding: 8px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  gap: 4px;
   background-color: white;
-  list-style-type: none;
-  overflow: hidden;
-
-}
-.products{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  text-align: center;
-  margin: 0 auto;
-  margin-top: 40px;
-  z-index: 1;
-  position: static;
-}
-.background-img{
-  overflow: hidden;
-  max-height: 100%;
-  max-width: 100%;
-  z-index: 0;
-  position: relative;
-  top: calc(100% / 2);
-  transform: translate(0, -50%)
-}
-.item-name{
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  top: -70px;
-  position: relative;
-  word-break: break-word;
-  font-size: 40px;
-  font-family: "Century Gothic",serif;
-  font-weight: bold;
-  text-shadow: 0 0.2vw 0.4vw rgba(255, 255, 255, 0.8);
-}
-.product-card:hover{
-  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
-  transform: translate(3px, -3px);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.rating-dropdown, .dietaryfeatures-dropdown, .price-dropdown, .dietarytype-dropdown{
   border: 2px solid black;
-  border-radius: 5px;
-  height: 200px;
-  width: 200px;
-  position: absolute;
-  left: auto;
-  right: 5vw;
-  max-width: calc(100vw - 10vw);
-  z-index: 99;
-  background-color: rgba(255, 255, 255, 1);
-}
-.rating, .dietaryfeatures, .price, .dietarytype{
-  width: 150px;
-  text-align: center;
-}
-.rating-dropdown{
-  top: 476px;
-}
-.dietarytype-dropdown{
-  top: 376px;
-}
-.dietaryfeatures-dropdown{
-  top: 446px;
-}
-.price-dropdown{
-  top: 411px;
-}
-</style>
-<style>
-* { box-sizing: border-box; }
-
-html, body, #app {
-  margin: 0;
-  max-width: 100%;
-  overflow-x: hidden;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
 }
 
-html, body, * {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-  html::-webkit-scrollbar,
-  body::-webkit-scrollbar,
-  *::-webkit-scrollbar {
-  display: none;
-  width: 0;
-  height: 0;
-}
 .filter-item {
   position: relative;
-  width: 150px;
-  text-align: center;
 }
+
 .filter-option {
-  width: 150px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: black;
+  font-family: "Century Gothic", sans-serif;
+  font-size: 15px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
 }
+
+.filter-option:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+
+.filter-option.active {
+  background-color: black;
+  color: white;
+}
+
+.option-arrow {
+  opacity: 0.5;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.filter-option.active .option-arrow {
+  opacity: 1;
+  transform: translateX(-2px);
+}
+
 .sub-dropdown {
   position: absolute;
   top: 0;
-  right: 100%;
-  margin-right: 12px;
-  width: 200px;
-  height: 200px;
-  max-width: calc(100vw - 10vw - 170px);
-  border: 2px solid black;
-  border-radius: 5px;
+  right: calc(100% + 18px);
+  width: 220px;
+  min-height: 160px;
+  padding: 14px;
   background-color: white;
+  border: 2px solid black;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
   z-index: 99;
 }
 
+/* Animation */
+.pop-enter-active,
+.pop-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.pop-enter-from,
+.pop-leave-to {
+  opacity: 0;
+  transform: translateY(-6px) scale(0.97);
+}
+
+/* ---------- Ergebnisse ---------- */
 .products {
-  margin: 0 15rem;
+  margin: 40px 15rem 0;
+  text-align: center;
 }
-.product-card {
-  height: 250px;
-  border: 2px solid black;
-  width: 200px;
-  border-radius: 1rem;
-  padding: 10px;
-  margin: 10px;
-  background-color: white;
-  list-style-type: none;
-  overflow: hidden;
-}
-.product-card:hover {
-  box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
-  transform: translate(3px, -3px);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-.background-img {
-  overflow: hidden;
-  max-height: 100%;
-  max-width: 100%;
-  z-index: 0;
-  position: relative;
-  top: 50%;
-  transform: translate(0, -50%);
-}
-.item-name {
-  z-index: 1;
-  display: flex;
-  justify-content: center;
-  top: -70px;
-  position: relative;
-  word-break: break-word;
-  font-size: 40px;
-  font-family: "Century Gothic", serif;
-  font-weight: bold;
-  text-shadow: 0 0.2vw 0.4vw rgba(255, 255, 255, 0.8);
-}
+
 .no-results {
-  list-style-type: none;
   font-family: "Century Gothic", sans-serif;
   font-size: 24px;
   margin: 40px 10px;
 }
-.result__grid{
+
+.result__grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1rem;
-  color: white;
 }
-#result__header{
+
+#result__header {
   font-size: 2rem;
   font-family: "Century Gothic", Helvetica, sans-serif;
   padding-bottom: 1rem;
@@ -430,6 +359,7 @@ body,
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
 html::-webkit-scrollbar,
 body::-webkit-scrollbar,
 *::-webkit-scrollbar {
