@@ -8,16 +8,32 @@ import {users} from "../data/Users.js"
 const email = ref('');
 const password = ref('');
 const router = useRouter();
+const errorLoginEmail = ref(false);
+const errorLoginPassword = ref(false);
+
 
 const {login} = useAuth();
 
 function login_checker() {
+  errorLoginEmail.value = false;
+  errorLoginPassword.value = false;
+  if (!email.value) {
+    errorLoginEmail.value = true;
+  }
+  if (!password.value) {
+    errorLoginPassword.value = true;
+  }
+  if (errorLoginEmail.value || errorLoginPassword.value) {
+    return;
+  }
+
   const success = login(email.value, password.value);
   if (!success) {
-    console.log("Kein Email oder Passwort");
-    return
+    errorLoginEmail.value = true;
+    errorLoginPassword.value = true;
+    return;
   }
-    router.push('/')
+  router.push('/');
 }
 
 </script>
@@ -28,10 +44,12 @@ function login_checker() {
       <div class="login__input__container">
         <label for="email"><b>E-Mail</b></label>
         <input type="email" id="email" name="email" placeholder="E-Mail" v-model="email" />
+        <span class="login__error__message" v-show="errorLoginEmail">Email fehlt oder ist falsch</span>
       </div>
       <div class="login__input__container">
         <label for="password"><b>Password</b></label>
         <input type="password" id="password" name="password" placeholder="Password" v-model="password" />
+        <span class="login__error__message" v-show="errorLoginPassword">Passwort fehlt oder ist falsch</span>
       </div>
       <div class="login__input__container">
         <button class="login__button">
@@ -78,5 +96,10 @@ function login_checker() {
   border-style: solid;
   border-width: 3px;
   background-color: white;
+}
+.login__error__message {
+  color:red;
+  font-size: 1rem;
+  margin-top: 0.3rem;
 }
 </style>
