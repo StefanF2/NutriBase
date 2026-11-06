@@ -1,62 +1,85 @@
 <script setup>
-import { ref, computed } from 'vue';
-import { tests } from '../data/ProductData.js';
-import { useFavorites } from '../data/Favorites.js';
+import { ref, computed, watch } from "vue";
+import { useFavorites } from "../data/Favorites.js";
 import Result from "./Result.vue";
 
-const message = ref('');
+const message = ref("");
+const searchTerm = ref("");
+const searchedbar = ref(false);
+
 const isFilterOpen = ref(false);
 const openDropdown = ref(null);
-const searchedbar = ref(false);
-const { liked } = useFavorites();
-const searchTerm = ref('');
 
-const favoriteItems = computed(() =>
-    tests.filter((product) => liked.value.includes(product.id))
-);
+const { liked } = useFavorites();
+
+const favoriteItems = ref([]);
+
 const filteredProducts = computed(() => {
   const search = searchTerm.value.trim().toLowerCase();
-  return favoriteItems.value.filter((p) => p.title.toLowerCase().includes(search));
+
+  return favoriteItems.value.filter((product) =>
+      product.title.toLowerCase().includes(search)
+  );
 });
+
+async function loadFavorites() {
+  const ids = [...liked.value];
+
+  console.log("Favoriten-IDs:", ids);
+
+  const products = await Promise.all(
+      ids.map(async (id) => {
+        try {
+          const response = await fetch(
+              `https://world.openfoodfacts.org/api/v2/product/${id}.json`
+          );
+
+          const data = await response.json();
+
+          if (data.status !== 1) return null;
+
+          const p = data.product;
+
+          return {
+            id: String(id),
+            title: p.product_name || "Unbekanntes Produkt",
+            image: p.image_front_url || ""
+          };
+        } catch (error) {
+          console.error("Produkt konnte nicht geladen werden:", id, error);
+          return null;
+        }
+      })
+  );
+
+  favoriteItems.value = products.filter(Boolean);
+}
+
+watch(
+    liked,
+    () => {
+      loadFavorites();
+    },
+    { immediate: true, deep: true }
+);
 
 function showResults() {
   searchedbar.value = true;
 }
+
 function search() {
   searchTerm.value = message.value;
+  showResults();
 }
+
 function toggleFilter() {
   isFilterOpen.value = !isFilterOpen.value;
   openDropdown.value = null;
 }
+
 function toggleDropdown(name) {
   openDropdown.value = openDropdown.value === name ? null : name;
 }
-function toggledietaryfeatures() {
-  isDietaryfeaturesOpen.value = !isDietaryfeaturesOpen.value;
-  isDietarytypeOpen.value = false;
-  isPriceOpen.value = false;
-  isRatingOpen.value = false;
-  const dietaryfeaturesklasse = document.getElementById('dietaryfeatures');
-}
-function toggleprice() {
-  isPriceOpen.value = !isPriceOpen.value;
-  isDietaryfeaturesOpen.value = false;
-  isDietarytypeOpen.value = false;
-  isRatingOpen.value = false;
-  const priceklasse = document.getElementById('price');
-}
-function toggledietarytype() {
-  isDietarytypeOpen.value = !isDietarytypeOpen.value;
-  isDietaryfeaturesOpen.value = false;
-  isPriceOpen.value = false;
-  isRatingOpen.value = false;
-  const dietarytypeklasse = document.getElementById('dietarytype');
-}
-
-
-let test;
-test = ['Apfel','Banane','Birne', 'kirsche', 'Wassermelone', 'Granatapfel'];
 </script>
 
 <template>
