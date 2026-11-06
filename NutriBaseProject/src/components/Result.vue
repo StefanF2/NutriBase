@@ -1,30 +1,42 @@
+
 <script setup>
 const props = defineProps({
-  id: Number,
+  id: String,
   title: String,
   image: String,
-})
+});
 </script>
 
 <template>
-  <RouterLink style="text-decoration: none" :to="'/productinfo/'+props.id">
-  <button style="text-decoration: none;" class="results__item">
-    <div class="results__image">
-      <img :src="props.image" alt=""/>
-    </div>
-    <div class="results__title">
-      {{ props.title }}
-    </div>
-  </button>
+  <RouterLink
+      style="text-decoration: none"
+      :to="'/productinfo/' + props.id"
+  >
+    <button
+        style="text-decoration: none;"
+        class="results__item"
+    >
+      <div class="results__image">
+        <img
+            :src="props.image"
+            :alt="props.title"
+        />
+      </div>
+
+      <div class="results__title">
+        {{ props.title }}
+      </div>
+    </button>
   </RouterLink>
 </template>
 
 <style scoped>
-.results__item:hover{
+.results__item:hover {
   transition: 0.2s;
   transform: scale(1.010);
   box-shadow: 5px 5px 5px 5px rgba(0, 0, 0, 0.3);
 }
+
 .results__item {
   width: 100%;
   aspect-ratio: 1 / 1;
@@ -32,13 +44,14 @@ const props = defineProps({
   border: 3px solid black;
   box-sizing: border-box;
   background-color: white;
-  cursor:pointer;
+  cursor: pointer;
   border-radius: 1rem;
 
   display: grid;
   grid-template-rows: 1fr auto;
   overflow: hidden;
 }
+
 .results__image {
   min-height: 0;
   display: flex;
@@ -58,5 +71,4 @@ const props = defineProps({
   font-family: "Century Gothic", Helvetica, sans-serif;
   font-weight: bold;
 }
-
 </style>
